@@ -1,0 +1,24 @@
+.boton-menu {
+    border: none;
+    background: transparent;
+    font-size: 32px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: transform 1s;
+    color: rgb(209 213 219);
+ 
+    
+  }
+
+  
+  .boton-menu:hover {
+    transform: scale(1.1);
+    color: white;
+  }
+  
+  .boton-menu.abierto {
+    transform: rotate(180deg);
+  }
+  .boton-menu.cerrado {
+    transform: rotate(-180deg);
+  }
