@@ -6,7 +6,9 @@ import Layout from './components/layout/layout';
 import Dashboard from './pages/dashboard';
 import NotFound from './pages/NotFound/NotFound';
 import Login from './pages/login';
+import Cupones from './pages/Cupones';
 import Vecinos from './pages/vecinos';
+import Configuracion from './pages/configuracion';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/vecinos" element={<Vecinos />} />
+          <Route path="/cupones" element={<Cupones />} />
+          <Route path="/configuracion" element={<Configuracion />} />
         </Route>
       </Route>
       <Route path="/login" element={<Login />} />

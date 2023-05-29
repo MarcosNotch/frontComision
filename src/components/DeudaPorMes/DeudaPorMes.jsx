@@ -40,7 +40,6 @@ export default function DeudaPorMes({nroAdherente}){
             }
             const response = await fetch(`http://localhost:8080/api/v1/pagos/deudas?anio=${valorFiltroAno}&nroAdherente=` + nroAdherente, options)
             const data = await response.json()
-            console.log(data)
 
             const pagosPorMes = {};
             const final = []

@@ -36,9 +36,15 @@ export default function Categories({ abrir }) {
                         </li>
 
                         <li>
-                            <Link to="/vecinos" className="flex items-center space-x-2">
+                            <Link to="/cupones" className="flex items-center space-x-2">
                                 <img src="https://img.icons8.com/ios-glyphs/30/FFFFFF/purchase-order.png" alt="ExpensesIcon" />
-                                <p className="hover:text-white text-gray-300 text-sm tracking-wide">Generar Cupones</p>
+                                <p className="hover:text-white text-gray-300 text-sm tracking-wide">Cupones</p>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/configuracion" className="flex items-center space-x-2">
+                                <img src="https://img.icons8.com/ios-filled/30/FFFFFF/settings.png" alt="ExpensesIcon" />
+                                <p className="hover:text-white text-gray-300 text-sm tracking-wide">Configuracion</p>
                             </Link>
                         </li>
                     </ul>

@@ -1,37 +1,35 @@
-import { redirect } from "react-router-dom";
-import { useState, useMemo } from "react"
-import DatePicker from "react-datepicker";
-import PageTitle from "../components/PageTitle/PageTitle";
-import { useRef, useEffect } from "react";
-import CelesteButton from "../components/Buttons/CelesteButton/CelesteButton";
-import { useTable } from "react-table";
+import PageTitle from "../components/PageTitle/PageTitle"
+import PageSubTitle from "../components/PageSubTitle/PageSubTitle"
+import { useMemo, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import "react-datepicker/dist/react-datepicker.css";
-import PageSubTitle from "../components/PageSubTitle/PageSubTitle";
-import DeudaPorMes from "../components/DeudaPorMes/DeudaPorMes";
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { useTable } from "react-table";
+import CelesteButton from "../components/Buttons/CelesteButton/CelesteButton";
+import PopupNuevoValorCuota from "../components/PopupNuevoValorCuota/PopupNuevoValorCuota";
+import PlanDePagos from "../components/PlanDePagos/PlanDePagos";
+import GenerarCuponIndividual from "../components/GenerarCupones/GenerarCuponIndividual";
 
-export default function Dashboard() {
-
-    const filtroNroAdhetente = useRef()
-
-    var firstDayOfTheMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-    const lastDay = new Date();
-    const navigate = useNavigate();
-
-    const [pagina, setPagina] = useState(1)
-
-    const [startDateMov1, setStartDateMov1] = useState(firstDayOfTheMonth);
-    const [startDateMov2, setStartDateMov2] = useState(lastDay);
-    const [valorFiltroNroAdherente, setValorFiltroNroAdherente] = useState(null)
-    const [totalRows, setTotalRows] = useState(0)
-    const [pagos, setPagos] = useState([])
+export default function Cupones(){
     const [loading, setLoading] = useState(false)
+    const [pagina, setPagina] = useState(1)
+    const [totalRows, setTotalRows] = useState(0)
+    const hasNext = pagina < Math.ceil(totalRows / 10)
+    const navigate = useNavigate();
+    const [pagos, setPagos] = useState([])
     const token = sessionStorage.getItem("token");
 
-    const hasNext = pagina < Math.ceil(totalRows / 10)
+    const [abrirPopupNuevoValorCuota, setAbrirPopupNuevoValorCuota] = useState(false)
+
+    const hasPrev = pagina > 1
+    const disabledPrev = !hasPrev || loading
+    const disabledNext = !hasNext || loading
+
+    const next = () => {
+        setPagina(pagina + 1)
+    }
+
+    const prev = () => {
+        setPagina(pagina - 1)
+    }
 
     useEffect(() => {
 
@@ -50,7 +48,9 @@ export default function Dashboard() {
                     }
                 }
 
-                const response = await fetch(`http://localhost:8080/api/v1/pagos?&pageNum=${pagina}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}`, options)
+                const response = await fetch(`http://localhost:8080/api/v1/valorCuota?pageNum=${pagina}`, options)
+
+                
 
                 if (!response.ok && response.status == "403") {
                     console.log("entre aca")
@@ -59,8 +59,12 @@ export default function Dashboard() {
                 }
 
                 const data = await response.json()
-                setPagos(data.pagos)
-                setTotalRows(data.totalPagos)
+
+                console.log(data)
+
+
+                setPagos(data.valores)
+                setTotalRows(data.total)
                 setLoading(false)
             } catch (e) {
                 console.log(e)
@@ -77,45 +81,30 @@ export default function Dashboard() {
 
         obtenerPagos()
 
-    }, [pagina, valorFiltroNroAdherente, startDateMov1, startDateMov2])
+    }, [pagina])
 
-    const hasPrev = pagina > 1
-    const disabledPrev = !hasPrev || loading
-    const disabledNext = !hasNext || loading
-
-    const next = () => {
-        setPagina(pagina + 1)
-    }
-
-    const prev = () => {
-        setPagina(pagina - 1)
-    }
 
     const columns = useMemo(
         () => [
             {
-                Header: 'Titular',
-                accessor: 'vecino.titular', // accessor is the "key" in the data
+                Header: 'Desde',
+                accessor: 'fechaDesde', // accessor is the "key" in the data
             },
             {
-                Header: 'Nro Adherente',
-                accessor: 'vecino.nroAdherente',
+                Header: 'Hasta',
+                accessor: 'fechaHasta',
             },
             {
-                Header: 'Fecha de Pago',
-                accessor: 'fechaPago',
+                Header: 'Monto',
+                accessor: 'primerValor',
             },
             {
-                Header: 'Fecha de Acreditacion',
-                accessor: 'fechaAcreditacion',
+                Header: 'Segundo Vencimiento',
+                accessor: 'segundoValor',
             },
             {
-                Header: 'Canal de Cobro',
-                accessor: 'canalCobro.descripcion',
-            },
-            {
-                Header: 'Importe Pagado',
-                accessor: 'importePagado',
+                Header: 'Tercer Vencimiento',
+                accessor: 'tercerValor',
             },
         ],
         []
@@ -131,49 +120,21 @@ export default function Dashboard() {
         prepareRow,
     } = tableInstance
 
-    function buscarCliente(e) {
-        e.preventDefault()
-        console.log(filtroNroAdhetente.current.value)
-        setValorFiltroNroAdherente(filtroNroAdhetente.current.value)
-    }
 
 
-    function exportPdf() {
+    return(
 
-        const doc = new jsPDF('l', 'mm', 'a4');
-        autoTable(doc, { html: '#my-table2' });
-        doc.save(`pagos.pdf`);
-    }
+        <>
+            <PageTitle text="Cupones" />
 
-    return (
-        <div className="w-full flex flex-col pb-10">
-            <PageTitle text="Pagos y Deudas" />
-            <form onSubmit={buscarCliente} className="flex flex-col lg:space-y-0 space-y-4 sm:flex-row flex-wrap space-x-4 items-start justify-start mb-4">
-                <div className="flex flex-col space-y-1 items-start">
-                    <p className="text-gray-300 ">Número de Adherente</p>
-                    <input ref={filtroNroAdhetente} className="rounded-sm bg-azul2 outline-none px-2 h-10 text-gray-300 border border-gray-400" type="text" name="" />
+
+            <div className="pb-16">
+                <PageSubTitle texto="Valor normal de la cuota" />
+                <div className="my-8">
+                    <CelesteButton texto={"Nuevo Valor"} accion={() => setAbrirPopupNuevoValorCuota(true)} />
                 </div>
-                <div className="flex space-x-0 sm:space-x-8 space-y-4 sm:space-y-0 sm:flex-row flex-col ">
-                    <div className="flex flex-col space-y-1 items-start">
-                        <p className="text-gray-300 ">Pagos Desde</p>
-                        <DatePicker className="relative rounded-sm bg-azul2 w-32 outline-none px-2 h-10 text-gray-300 border border-gray-400" dateFormat={"dd/MM/yyyy"} selected={startDateMov1} onChange={(date) => setStartDateMov1(date)} />
-                    </div>
-                    <div className="flex flex-col space-y-1 items-start">
-                        <p className="text-gray-300 ">Pagos Hasta</p>
-                        <DatePicker className="relative rounded-sm bg-azul2 w-32 outline-none px-2 h-10 text-gray-300 border border-gray-400" dateFormat={"dd/MM/yyyy"} selected={startDateMov2} onChange={(date) => setStartDateMov2(date)} />
-                    </div>
-                </div>
-                <div className="flex flex-col space-y-1 items-start">
-                    <div className="mt-6">
-
-                    </div>
-                    <CelesteButton texto={"Buscar Vecino"} />
-                </div>
-
-            </form>
-            <CelesteButton accion={exportPdf} texto={"Exportar"} />
-            <PageSubTitle texto={"Pagos"} />
-            <div className="w-full overflow-x-auto mb-8">
+                
+                <div className="w-full overflow-x-auto mb-8">
                 <table className="w-full max-sm:w-[700px]  sm:min-w-[830px] bg-azul2 flex flex-col rounded-sm" id="my-table2">
 
                     <thead className="h-20 w-full flex  items-center border-b border-gray-400">
@@ -244,15 +205,13 @@ export default function Dashboard() {
                     </div>
                 </table>
             </div>
+              <PlanDePagos />
+              <GenerarCuponIndividual />
+            </div>
+        {abrirPopupNuevoValorCuota && <PopupNuevoValorCuota setAbrirModal={setAbrirPopupNuevoValorCuota} />}
+        </>
 
-
-            {
-                valorFiltroNroAdherente && <>
-                    <PageSubTitle texto={"Deuda por mes"} />
-                    <DeudaPorMes nroAdherente={valorFiltroNroAdherente} />
-                </>
-
-            }
-        </div>
     )
+
+
 }

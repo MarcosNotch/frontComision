@@ -35,6 +35,7 @@ export default function Login() {
         const password = passwordRef.current.value;
         try {
             const response  = await post("http://localhost:8080/api/v1/auth/authenticate", { email:username , password })
+            console.log(response)
             sessionStorage.setItem("token", response.token);
             navigate("/")
             
