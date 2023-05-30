@@ -167,11 +167,15 @@ export default function Dashboard() {
                     <div className="mt-6">
 
                     </div>
-                    <CelesteButton texto={"Buscar Vecino"} />
+                    <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <CelesteButton texto={"Buscar Vecino"} />
+                        <CelesteButton accion={exportPdf} texto={"Exportar"} />
+                    </div>
+                  
                 </div>
 
             </form>
-            <CelesteButton accion={exportPdf} texto={"Exportar"} />
+      
             <PageSubTitle texto={"Pagos"} />
             <div className="w-full overflow-x-auto mb-8">
                 <table className="w-full max-sm:w-[700px]  sm:min-w-[830px] bg-azul2 flex flex-col rounded-sm" id="my-table2">
