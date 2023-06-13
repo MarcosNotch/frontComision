@@ -29,7 +29,7 @@ export default function PopupNuevoValorCuota({ setAbrirModal, setActualizar }) {
         })
     }
 
-        const response = await fetch(`http://localhost:8080/api/v1/valorCuota`, options)
+        const response = await fetch(`http://54.89.184.151:8080/api/v1/valorCuota`, options)
         if (response.status === 200){
             setActualizar(e => !e)
             cancelar()

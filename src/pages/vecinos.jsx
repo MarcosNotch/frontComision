@@ -1,12 +1,12 @@
 import BlueButton from "../components/Buttons/BlueButton/BlueButton"
 import { useState } from "react"
 import PageTitle from "../components/PageTitle/PageTitle"
-import { useMemo } from "react"
+import { useMemo, useEffect } from "react"
 import { useTable } from "react-table"
 import CelesteButton from "../components/Buttons/CelesteButton/CelesteButton"
 import { useRef } from "react"
 import { useFetch } from "../hooks/useFetch"
-
+import EditarVecino from "../components/Popups/EditarVecino/EditarVecino"
 
 export default function Vecinos() {
 
@@ -17,7 +17,7 @@ export default function Vecinos() {
     const [valorFiltroTitular, setValorFiltroTitular] = useState(null)
     const [valorFiltroNroAdherente, setValorFiltroNroAdherente] = useState(null)
     const [pagina, setPagina] = useState(1)
-    const { data: clients, loading: loadingF, error: errorF, totalRows} = useFetch(`http://localhost:8080/api/v1/vecinos?idZona=1&pageNum=${pagina}${valorFiltroTitular ? `&nombre=${valorFiltroTitular}` : ''}${valorFiltroNroAdherente ?`&nroAdherente=${valorFiltroNroAdherente}` : '' }`, recargarPagina)
+    const { data: clients, loading: loadingF, error: errorF, totalRows} = useFetch(`http://54.89.184.151:8080/api/v1/vecinos?idZona=1&pageNum=${pagina}${valorFiltroTitular ? `&nombre=${valorFiltroTitular}` : ''}${valorFiltroNroAdherente ?`&nroAdherente=${valorFiltroNroAdherente}` : '' }`, recargarPagina)
     const [clienteEditar, setClienteEditar] = useState(null)
     const comboRef = useRef()
     const hasNext = pagina < Math.ceil(totalRows / 10)
@@ -101,7 +101,10 @@ export default function Vecinos() {
                         <div className="w-full h-5">
 
                         </div>
-                        <CelesteButton texto={"Buscar Vecino"} />
+                        <div className="flex space-x-4">
+                            <CelesteButton texto={"Buscar Vecino"} />
+                        </div>
+                        
                     </div>                  
                 </form>
 
@@ -177,6 +180,10 @@ export default function Vecinos() {
                     </div>
                 </table>
             </div>
+            {
+                abrirNewModal && 
+                <EditarVecino setActualizar={setRecargarPagina}  setAbrirModal={setAbrirNewModal} clienteAEditar={clienteEditar}/>
+            }
         </div>
     )
 }

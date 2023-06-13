@@ -34,7 +34,7 @@ export default function Login() {
         const username = emailRef.current.value;
         const password = passwordRef.current.value;
         try {
-            const response  = await post("http://localhost:8080/api/v1/auth/authenticate", { email:username , password })
+            const response  = await post("http://54.89.184.151:8080/api/v1/auth/authenticate", { email:username , password })
             console.log(response)
             sessionStorage.setItem("token", response.token);
             sessionStorage.setItem("id", response.id);

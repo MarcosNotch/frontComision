@@ -50,11 +50,9 @@ export default function Dashboard() {
                     }
                 }
 
-                const response = await fetch(`http://localhost:8080/api/v1/pagos?&pageNum=${pagina}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}`, options)
+                const response = await fetch(`http://54.89.184.151:8080/api/v1/pagos?&pageNum=${pagina}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}`, options)
 
                 if (!response.ok && response.status == "403") {
-                    console.log("entre aca")
-
                     navigate("/login")
                 }
 
@@ -147,7 +145,7 @@ export default function Dashboard() {
 
     return (
         <div className="w-full flex flex-col pb-10">
-            <PageTitle text="Pagos y Deudas" />
+            <PageTitle text="Pagos" />
             <form onSubmit={buscarCliente} className="flex flex-col lg:space-y-0 space-y-4 sm:flex-row flex-wrap space-x-4 items-start justify-start mb-4">
                 <div className="flex flex-col space-y-1 items-start">
                     <p className="text-gray-300 ">Número de Adherente</p>

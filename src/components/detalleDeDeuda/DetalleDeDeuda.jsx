@@ -1,24 +1,62 @@
-import PageTitle from "../components/PageTitle/PageTitle"
-import PageSubTitle from "../components/PageSubTitle/PageSubTitle"
-import { useMemo, useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom";
+import PageSubTitle from "../PageSubTitle/PageSubTitle"
+import { useRef, useState, useMemo, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useTable } from "react-table";
-import CelesteButton from "../components/Buttons/CelesteButton/CelesteButton";
-import PopupNuevoValorCuota from "../components/PopupNuevoValorCuota/PopupNuevoValorCuota";
-import PlanDePagos from "../components/PlanDePagos/PlanDePagos";
-import GenerarCuponIndividual from "../components/GenerarCupones/GenerarCuponIndividual";
+import { useNavigate } from "react-router-dom";
 
-export default function Cupones(){
-    const [loading, setLoading] = useState(false)
-    const [pagina, setPagina] = useState(1)
+export default function DetalleDeDeuda({nroAdherente, fechaDesde, fechaHasta}){
+
+    const [pagina, setPagina] = useState(0)
     const [totalRows, setTotalRows] = useState(0)
-    const hasNext = pagina < Math.ceil(totalRows / 10)
+    const [loading, setLoading] = useState(false)
+    const [detalleDeudas, setDetalleDeudas] = useState([])
+    const token = sessionStorage.getItem("token")
     const navigate = useNavigate();
-    const [pagos, setPagos] = useState([])
-    const token = sessionStorage.getItem("token");
 
-    const [abrirPopupNuevoValorCuota, setAbrirPopupNuevoValorCuota] = useState(false)
 
+    useEffect(() => {
+        async function obtenerDetalle(){
+            const abortCont = new AbortController();
+                const signal = abortCont.signal;
+                setLoading(true)
+    
+                try {
+                    const options =
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        }
+                    }
+                    // 54.89.184.151
+                    const response = await fetch(`http://localhost:8080/api/v1/deudas/periodosAdeudados?${nroAdherente ? `&nroAdherente=${nroAdherente}` : ''}`, options)
+    
+                    if (!response.ok && response.status == "403") {
+                        navigate("/login")
+                    }
+    
+                    const data = await response.json()
+                    setDetalleDeudas(data)
+                    setTotalRows(10)
+                    setLoading(false)
+                } catch (e) {
+                    if (!signal.aborted) {
+                        setDetalleDeudas([]);
+                    }
+                } finally {
+                    if (!signal.aborted) {
+                        setLoading(false);
+                    }
+                }
+        }
+
+        obtenerDetalle()
+    }, [pagina, nroAdherente, fechaDesde, fechaHasta])
+
+
+    const hasNext = pagina < totalRows - 1
     const hasPrev = pagina > 1
     const disabledPrev = !hasPrev || loading
     const disabledNext = !hasNext || loading
@@ -30,87 +68,26 @@ export default function Cupones(){
     const prev = () => {
         setPagina(pagina - 1)
     }
-
-    useEffect(() => {
-
-        async function obtenerPagos() {
-            const abortCont = new AbortController();
-            const signal = abortCont.signal;
-            setLoading(true)
-
-            try {
-                const options =
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token
-                    }
-                }
-
-                const response = await fetch(`http://54.89.184.151:8080/api/v1/valorCuota?pageNum=${pagina}`, options)
-
-                
-
-                if (!response.ok && response.status == "403") {
-                    console.log("entre aca")
-
-                    navigate("/login")
-                }
-
-                const data = await response.json()
-
-                console.log(data)
-
-
-                setPagos(data.valores)
-                setTotalRows(data.total)
-                setLoading(false)
-            } catch (e) {
-                console.log(e)
-                if (!signal.aborted) {
-                    setPagos([]);
-                }
-            } finally {
-                if (!signal.aborted) {
-                    setLoading(false);
-                }
-            }
-
-        }
-
-        obtenerPagos()
-
-    }, [pagina])
-
-
+    
     const columns = useMemo(
         () => [
             {
-                Header: 'Desde',
-                accessor: 'fechaDesde', // accessor is the "key" in the data
+                Header: 'Mes',
+                accessor: 'mes',
             },
             {
-                Header: 'Hasta',
-                accessor: 'fechaHasta',
+                Header: 'Año',
+                accessor: 'anio',
             },
             {
-                Header: 'Monto',
-                accessor: 'primerValor',
-            },
-            {
-                Header: 'Segundo Vencimiento',
-                accessor: 'segundoValor',
-            },
-            {
-                Header: 'Tercer Vencimiento',
-                accessor: 'tercerValor',
-            },
+                Header: 'Total',
+                accessor: 'total',
+            }
         ],
         []
     )
 
-    const tableInstance = useTable({ columns, data: pagos })
+    const tableInstance = useTable({ columns, data: detalleDeudas })
 
     const {
         getTableProps,
@@ -120,20 +97,10 @@ export default function Cupones(){
         prepareRow,
     } = tableInstance
 
-
-
     return(
-
         <>
-            <PageTitle text="Cupones" />
-
-
-            <div className="pb-16">
-                <PageSubTitle texto="Valor normal de la cuota" />
-                <div className="my-8">
-                    <CelesteButton texto={"Nuevo Valor"} accion={() => setAbrirPopupNuevoValorCuota(true)} />
-                </div>
-                
+            <div>
+                <PageSubTitle texto="Detalle de deuda"/>
                 <div className="w-full overflow-x-auto mb-8">
                 <table className="w-full max-sm:w-[700px]  sm:min-w-[830px] bg-azul2 flex flex-col rounded-sm" id="my-table2">
 
@@ -143,7 +110,7 @@ export default function Cupones(){
                                 <tr {...headerGroup.getHeaderGroupProps()} className="w-full flex items-center justify-center">
                                     {
                                         headerGroup.headers.map((column) => (
-                                            <th {...column.getHeaderProps()} className="flex items-center justify-center w-1/5">
+                                            <th {...column.getHeaderProps()} className="flex items-center justify-center w-1/3">
                                                 <p className="text-gray-300">{column.render('Header')}</p>
                                             </th>
                                         ))
@@ -161,7 +128,7 @@ export default function Cupones(){
                                         {
                                             row.cells.map((cell) => {
                                                 return (
-                                                    <td {...cell.getCellProps()} className="w-1/5 flex items-center justify-center hover:cursor-pointer" >
+                                                    <td {...cell.getCellProps()} className="w-1/3 flex items-center justify-center hover:cursor-pointer" >
                                                         <p className="text-gray-300 text-sm ">{cell.render('Cell')}</p>
                                                     </td>
                                                 )
@@ -205,12 +172,9 @@ export default function Cupones(){
                     </div>
                 </table>
             </div>
-          
-              <GenerarCuponIndividual />
             </div>
-        {abrirPopupNuevoValorCuota && <PopupNuevoValorCuota setAbrirModal={setAbrirPopupNuevoValorCuota} />}
+        
         </>
-
     )
 
 

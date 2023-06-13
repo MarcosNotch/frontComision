@@ -9,6 +9,8 @@ import Login from './pages/login';
 import Cupones from './pages/Cupones';
 import Vecinos from './pages/vecinos';
 import Configuracion from './pages/configuracion';
+import Deudas from './pages/deudas';
+
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
       <Route element={<PrivateRoute />}>
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/deudas" element={<Deudas />} />
           <Route path="/vecinos" element={<Vecinos />} />
           <Route path="/cupones" element={<Cupones />} />
           <Route path="/configuracion" element={<Configuracion />} />

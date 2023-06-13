@@ -36,7 +36,7 @@ export default function NuevoPlanDePagos({ setAbrirModal, setActualizar }) {
 
         console.log(options)
 
-        const response = await fetch(`http://localhost:8080/api/v1/planDePago`, options)
+        const response = await fetch(`http://54.89.184.151:8080/api/v1/planDePago`, options)
         if (response.status === 200){
             setActualizar(e => !e)
             cancelar()

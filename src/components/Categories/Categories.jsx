@@ -20,11 +20,19 @@ export default function Categories({ abrir }) {
                 <nav className="flex items-center justify-center pt-8 space-y-4">
                     <ul className="flex flex-col space-y-8">
                         <li>
-                            <Link to="/" className="flex items-center space-x-2">
-                            
-                                <img src="https://img.icons8.com/ios-filled/32/FFFFFF/scales--v1.png" alt="CategoryIcon" />
+                            <div to="/pedidos" className="flex items-center space-x-2 hover:cursor-pointer" onClick={() => setAbrirCaja(e => !e)}>
+                                <img src="https://img.icons8.com/ios-glyphs/32/FFFFFF/stack-of-money.png" alt="MoneyIcon" />
                                 <p className="hover:text-white text-gray-300 text-sm tracking-wide">Pagos y Deudas</p>
-                            </Link>
+                            </div>
+                            <div className={`w-full flex flex-col justify-around  pl-10 transition-all duration-300 overflow-hidden ${abrirCaja ? "h-16" : "h-0"} `}>
+                                <Link to="/">
+                                    <p className="hover:text-white text-gray-300 text-sm tracking-wide">Pagos</p>
+                                </Link>
+                                <Link to="/deudas">
+                                    <p className="hover:text-white text-gray-300 text-sm tracking-wide">Deudas</p>
+                                </Link>
+                            </div>
+
                         </li>
 
 

@@ -17,7 +17,7 @@ export default function PopupPagarDeuda({mes, monto, anio, nroAdherente, setAbri
         },
         body: JSON.stringify({
             "nroAdherente": nroAdherente,
-            "mes": mes,
+            "mes": mes-1,
             "anio": anio,
         })
     }
@@ -45,7 +45,7 @@ export default function PopupPagarDeuda({mes, monto, anio, nroAdherente, setAbri
                         <h1 className="text-white text-2xl font-medium">Marcar como PAGADO</h1>
                     </div>
                     <div>
-                        <p className="text-white text-center mt-4">¿Está seguro que desea marcar como pagado la deuda de {mes} del {anio} para el vecino {nroAdherente}?</p>
+                        <p className="text-white text-center mt-4">¿Está seguro que desea marcar como pagado la deuda de {mes-1} del {anio} para el vecino {nroAdherente}?</p>
                     </div>
 
                     <div className="flex items-center justify-center space-x-4 mt-2">

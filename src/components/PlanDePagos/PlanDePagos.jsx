@@ -73,7 +73,7 @@ export default function PlanDePagos(){
                     }
                 }
 
-                const response = await fetch(`http://localhost:8080/api/v1/planDePago?pageNum=${pagina}`, options)
+                const response = await fetch(`http://54.89.184.151:8080/api/v1/planDePago?pageNum=${pagina}`, options)
 
                 const data = await response.json()
 

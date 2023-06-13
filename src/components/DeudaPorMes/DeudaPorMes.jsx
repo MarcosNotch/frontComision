@@ -1,5 +1,4 @@
 import { useRef, useEffect, useMemo, useState} from "react";
-import dayjs from "dayjs";
 import "react-datepicker/dist/react-datepicker.css";
 import { useTable } from "react-table";
 import CelesteButton from "../Buttons/CelesteButton/CelesteButton";
@@ -38,7 +37,7 @@ export default function DeudaPorMes({nroAdherente}){
                     "Authorization": "Bearer " + token
                 }
             }
-            const response = await fetch(`http://localhost:8080/api/v1/pagos/deudas?anio=${valorFiltroAno}&nroAdherente=` + nroAdherente, options)
+            const response = await fetch(`http://54.89.184.151:8080/api/v1/pagos/deudas?anio=${valorFiltroAno}&nroAdherente=` + nroAdherente, options)
             const data = await response.json()
 
             const pagosPorMes = {};
@@ -49,7 +48,6 @@ export default function DeudaPorMes({nroAdherente}){
             
             }
             final.push(pagosPorMes)
-            console.log(final)
 
             setData(final)
             setLoading(false)
@@ -182,8 +180,6 @@ export default function DeudaPorMes({nroAdherente}){
         setAnio(filtroAno.current.value)
 
         setAbrirNewModal(true)
-        console.log("entre")
-        console.log(info)
     }
 
 

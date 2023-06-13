@@ -32,7 +32,7 @@ export default function Configuracion(){
                 "Authorization": "Bearer " + token
             }
         }
-        const response = await fetch('http://localhost:8080/api/v1/siro?id_user='+ id, options)
+        const response = await fetch('http://54.89.184.151:8080/api/v1/siro?id_user='+ id, options)
         const data = await response.json()
         setSiro(data)
     }
@@ -46,7 +46,7 @@ export default function Configuracion(){
                 "Authorization": "Bearer " + token
             }
         }
-        const response = await fetch('http://localhost:8080/api/v1/gmail?id_user=' + id, options)
+        const response = await fetch('http://54.89.184.151:8080/api/v1/gmail?id_user=' + id, options)
         const data = await response.json()
         setGmail(data)
         if (response.ok) {
@@ -66,7 +66,7 @@ export default function Configuracion(){
                 password: passwordSiroRef.current.value
             })
         }
-        const response = await fetch('http://localhost:8080/api/v1/siro', options)
+        const response = await fetch('http://54.89.184.151:8080/api/v1/siro', options)
         if (response.ok) {
             toast.success('Credenciales actualizadas con exito');
         }
@@ -85,7 +85,7 @@ export default function Configuracion(){
                 password: passwordSiroRef.current.value
             })
         }
-        const response = await fetch('http://localhost:8080/api/v1/gmail', options)
+        const response = await fetch('http://54.89.184.151:8080/api/v1/gmail', options)
         if (response.ok) {
             toast.success('Credenciales actualizadas con exito');
         }
@@ -103,7 +103,7 @@ export default function Configuracion(){
                 password: passwordRef.current.value
             })
         }
-        const response = await fetch('http://localhost:8080/api/v1/user', options)
+        const response = await fetch('http://54.89.184.151:8080/api/v1/user', options)
         if (response.ok) {
             toast.success('Contraseña actualizada con exito');
         }
