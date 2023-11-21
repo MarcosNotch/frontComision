@@ -22,7 +22,7 @@ export default function PopupPagarDeuda({mes, monto, anio, nroAdherente, setAbri
         })
     }
 
-        const response = await fetch(`http://localhost:8080/api/v1/pagos/marcarPagado`, options)
+        const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/pagos/marcarPagado`, options)
         if (response.status === 200){
             setActualizar(e => !e)
             cerrarModal()

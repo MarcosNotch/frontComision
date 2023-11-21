@@ -9,7 +9,8 @@ export default function PopupNuevoValorCuota({ setAbrirModal, setActualizar }) {
     const primerValor = useRef(null)
     const segundoValor = useRef(null)
     const tercerValor = useRef(null)
-
+    const idZona = sessionStorage.getItem("idZona")
+    
     async function aceptar(e) {
 
     e.preventDefault()
@@ -25,12 +26,14 @@ export default function PopupNuevoValorCuota({ setAbrirModal, setActualizar }) {
             "fechaDesde": dayjs(new Date()).format('YYYY-MM-DD'),
             "primerValor": primerValor.current.value,
             "segundoValor": segundoValor.current.value,
-            "tercerValor":  tercerValor.current.value
+            "tercerValor":  tercerValor.current.value,
+            "idZona": idZona
         })
     }
 
-        const response = await fetch(`http://54.89.184.151:8080/api/v1/valorCuota`, options)
-        if (response.status === 200){
+        const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/valorCuota`, options)
+
+        if (response.ok) {
             setActualizar(e => !e)
             cancelar()
         }

@@ -32,7 +32,7 @@ export default function Configuracion(){
                 "Authorization": "Bearer " + token
             }
         }
-        const response = await fetch('http://54.89.184.151:8080/api/v1/siro?id_user='+ id, options)
+        const response = await fetch('https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/siro?id_user='+ id, options)
         const data = await response.json()
         setSiro(data)
     }
@@ -46,7 +46,7 @@ export default function Configuracion(){
                 "Authorization": "Bearer " + token
             }
         }
-        const response = await fetch('http://54.89.184.151:8080/api/v1/gmail?id_user=' + id, options)
+        const response = await fetch('https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/gmail?id_user=' + id, options)
         const data = await response.json()
         setGmail(data)
         if (response.ok) {
@@ -66,7 +66,7 @@ export default function Configuracion(){
                 password: passwordSiroRef.current.value
             })
         }
-        const response = await fetch('http://54.89.184.151:8080/api/v1/siro', options)
+        const response = await fetch('https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/siro', options)
         if (response.ok) {
             toast.success('Credenciales actualizadas con exito');
         }
@@ -81,11 +81,11 @@ export default function Configuracion(){
                 "Authorization": "Bearer " + token
             },
             body: JSON.stringify({
-                email: usuarioSiroRef.current.value,
-                password: passwordSiroRef.current.value
+                email: usuarioGmailRef.current.value,
+                password: passwordGmailRef.current.value
             })
         }
-        const response = await fetch('http://54.89.184.151:8080/api/v1/gmail', options)
+        const response = await fetch('https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/gmail', options)
         if (response.ok) {
             toast.success('Credenciales actualizadas con exito');
         }

@@ -31,6 +31,8 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(false)
     const token = sessionStorage.getItem("token");
 
+    const idZona = sessionStorage.getItem("idZona")
+
     const hasNext = pagina < Math.ceil(totalRows / 10)
 
     useEffect(() => {
@@ -50,7 +52,7 @@ export default function Dashboard() {
                     }
                 }
 
-                const response = await fetch(`http://54.89.184.151:8080/api/v1/pagos?&pageNum=${pagina}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}`, options)
+                const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/pagos?&pageNum=${pagina}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}&idZona=${idZona}`, options)
 
                 if (!response.ok && response.status == "403") {
                     navigate("/login")

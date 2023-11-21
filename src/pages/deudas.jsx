@@ -21,7 +21,7 @@ export default function Deudas(){
     const [deudas, setDeudas] = useState([])
     const [loading, setLoading] = useState(false)
     const [valorFiltroNroAdherente, setValorFiltroNroAdherente] = useState(null)
-    const [pagina, setPagina] = useState(0)
+    const [pagina, setPagina] = useState(1)
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
 
@@ -74,16 +74,18 @@ export default function Deudas(){
                             "Authorization": "Bearer " + token
                         }
                     }
-                    // 54.89.184.151
-                    const response = await fetch(`http://localhost:8080/api/v1/deudas/deudaVecinal?&pageNum=${pagina}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}`, options)
+
+                    const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/deudas/deudaVecinal?&pageNum=${pagina}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}`, options)
     
                     if (!response.ok && response.status == "403") {
                         navigate("/login")
                     }
-    
+                  
                     const data = await response.json()
+             
                     setDeudas(data.deudas)
                     setTotalRows(data.paginas)
+                 
                     setLoading(false)
                 } catch (e) {
                     if (!signal.aborted) {
@@ -100,6 +102,7 @@ export default function Deudas(){
             obtenerPagos()
     
         }, [pagina, startDateMov1, startDateMov2, valorFiltroNroAdherente])
+
 
     const hasPrev = pagina > 1
     const disabledPrev = !hasPrev || loading

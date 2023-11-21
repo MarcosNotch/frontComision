@@ -29,7 +29,7 @@ export default function GenerarCuponIndividual() {
             anio
         }]
 
-        const response = await fetch('http://54.89.184.151:8080/api/v1/cupones/cuponIndividual', {
+        const response = await fetch('https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/cupones/cuponIndividual', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

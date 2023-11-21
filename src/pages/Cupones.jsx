@@ -5,18 +5,20 @@ import { useNavigate } from "react-router-dom";
 import { useTable } from "react-table";
 import CelesteButton from "../components/Buttons/CelesteButton/CelesteButton";
 import PopupNuevoValorCuota from "../components/PopupNuevoValorCuota/PopupNuevoValorCuota";
-import PlanDePagos from "../components/PlanDePagos/PlanDePagos";
-import GenerarCuponIndividual from "../components/GenerarCupones/GenerarCuponIndividual";
+import EstadoCupones from "../components/EstadoDeCupones/EstadoCupones";
 
 export default function Cupones(){
     const [loading, setLoading] = useState(false)
     const [pagina, setPagina] = useState(1)
     const [totalRows, setTotalRows] = useState(0)
+
+    const [actualizar, setActualizar] = useState(false)
+
     const hasNext = pagina < Math.ceil(totalRows / 10)
     const navigate = useNavigate();
     const [pagos, setPagos] = useState([])
     const token = sessionStorage.getItem("token");
-
+    const idZona = sessionStorage.getItem("idZona")
     const [abrirPopupNuevoValorCuota, setAbrirPopupNuevoValorCuota] = useState(false)
 
     const hasPrev = pagina > 1
@@ -48,20 +50,14 @@ export default function Cupones(){
                     }
                 }
 
-                const response = await fetch(`http://54.89.184.151:8080/api/v1/valorCuota?pageNum=${pagina}`, options)
+                const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/valorCuota?pageNum=${pagina}&idZona=${idZona}`, options)
 
-                
 
                 if (!response.ok && response.status == "403") {
-                    console.log("entre aca")
-
                     navigate("/login")
                 }
 
                 const data = await response.json()
-
-                console.log(data)
-
 
                 setPagos(data.valores)
                 setTotalRows(data.total)
@@ -81,7 +77,7 @@ export default function Cupones(){
 
         obtenerPagos()
 
-    }, [pagina])
+    }, [pagina, actualizar])
 
 
     const columns = useMemo(
@@ -206,9 +202,11 @@ export default function Cupones(){
                 </table>
             </div>
           
-              <GenerarCuponIndividual />
+      
             </div>
-        {abrirPopupNuevoValorCuota && <PopupNuevoValorCuota setAbrirModal={setAbrirPopupNuevoValorCuota} />}
+
+            <EstadoCupones />
+        {abrirPopupNuevoValorCuota && <PopupNuevoValorCuota setAbrirModal={setAbrirPopupNuevoValorCuota} setActualizar={setActualizar}/>}
         </>
 
     )

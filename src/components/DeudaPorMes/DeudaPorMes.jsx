@@ -37,12 +37,12 @@ export default function DeudaPorMes({nroAdherente}){
                     "Authorization": "Bearer " + token
                 }
             }
-            const response = await fetch(`http://54.89.184.151:8080/api/v1/pagos/deudas?anio=${valorFiltroAno}&nroAdherente=` + nroAdherente, options)
+            const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/pagos/deudas?anio=${valorFiltroAno}&nroAdherente=` + nroAdherente, options)
             const data = await response.json()
 
             const pagosPorMes = {};
             const final = []
-
+            console.log(data)
             for (const pago of data) {
               pagosPorMes[pago.mes] = pago.montoPagado;
             
@@ -173,7 +173,7 @@ export default function DeudaPorMes({nroAdherente}){
             setMes(12)
         }
         if (info.column.Header === "Diciembre"){
-            setMes(12)
+            setMes(13)
         }
 
         setMonto(info.value)

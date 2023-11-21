@@ -34,10 +34,16 @@ export default function Login() {
         const username = emailRef.current.value;
         const password = passwordRef.current.value;
         try {
-            const response  = await post("http://54.89.184.151:8080/api/v1/auth/authenticate", { email:username , password })
-            console.log(response)
+            const response  = await post("https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/auth/authenticate", { email:username , password })
             sessionStorage.setItem("token", response.token);
             sessionStorage.setItem("id", response.id);
+
+            if (response.id === 4){
+                sessionStorage.setItem("idZona", 2)
+            }else{
+                sessionStorage.setItem("idZona", response.id)
+            }
+
             navigate("/")
             
         } catch (error) {
@@ -51,18 +57,16 @@ export default function Login() {
             <div className=" h-full flex items-center justify-center flex-col">
                 <form onSubmit={iniciarSesion} className="w-full  sm:w-[580px] h-96 sm:h-[480px] sm:bg-azul2 rounded-md flex flex-col items-center px-10 py-7 justify-between">
                     <div className="flex items-center">
-                        <div className="w-16 h-16 flex items-center space-x-4">
-                            <img className="object-contain" src="https://lithiumlandingpage.netlify.app/assets/images/whatsapp-image-2022-04-04-at-3.17.41-pm-removebg-preview-1-80x80.png" />
-                        </div>
-                        <div>
-                            <h1 className="text-white font-semibold text-3xl">LITHIUM</h1>
-                        </div>
+                    <div className="flex items-center sm:mb-4 max-sm:mb-8">
+                        <img src={require("../imgs/fotoblanca.png")} className="w-64" alt="" />
+                    </div>
+                     
 
                     </div>
                     <div className="w-full">
                         <div className="flex flex-col space-y-2 mb-4">
-                            <span className="text-gray-300 text-sm">Email</span>
-                            <input type="text" ref={emailRef} className="outline-none px-2 bg-azul2 border border-gris1 text-gray-300 p-4 rounded-md h-10 text-sm" placeholder="Ingrese su email" />
+                            <span className="text-gray-300 text-sm">Usuario</span>
+                            <input type="text" ref={emailRef} className="outline-none px-2 bg-azul2 border border-gris1 text-gray-300 p-4 rounded-md h-10 text-sm" placeholder="Ingrese su usuario" />
                         </div>
                         <div className="flex flex-col space-y-2">
                             <span className="text-gray-300 text-sm">Contraseña</span>

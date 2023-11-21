@@ -30,8 +30,8 @@ export default function DetalleDeDeuda({nroAdherente, fechaDesde, fechaHasta}){
                             "Authorization": "Bearer " + token
                         }
                     }
-                    // 54.89.184.151
-                    const response = await fetch(`http://localhost:8080/api/v1/deudas/periodosAdeudados?${nroAdherente ? `&nroAdherente=${nroAdherente}` : ''}`, options)
+            
+                    const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/deudas/periodosAdeudados?${nroAdherente ? `&nroAdherente=${nroAdherente}` : ''}`, options)
     
                     if (!response.ok && response.status == "403") {
                         navigate("/login")

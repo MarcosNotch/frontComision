@@ -13,7 +13,6 @@ export default function useCheckAuth(){
                     return
                 }
             } catch (e) {
-                console.log(e)
                 setUserAuth(false)
             }finally{
                 setLoading(false)

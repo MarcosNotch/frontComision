@@ -26,9 +26,9 @@ export default function Header() {
         <>
             <header className="flex flex-col sm:flex-row z-20 fixed top-0 left-0 w-full bg-negro h-16 shadow-2xl" >
                 <div className="w-full flex items-center justify-center p-3 sm:w-56 h-16 bg-negro flex-shrink-0 shadow-2xl">
-                    <div className="w-14 h-14 flex items-center space-x-4">
-                        <img className="object-contain" src="https://lithiumlandingpage.netlify.app/assets/images/whatsapp-image-2022-04-04-at-3.17.41-pm-removebg-preview-1-80x80.png" />
-                    </div>  
+                <div className="flex w-14 h-14 items-center sm:mb-4 max-sm:mb-8">
+              <img src={require("../../imgs/fotoblanca.png")} className="w-64" alt="" />
+            </div>
                     <div>
                         <h1 className="text-white font-semibold text-2xl">Comisión</h1>
                     </div>
