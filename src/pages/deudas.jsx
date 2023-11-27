@@ -61,7 +61,7 @@ export default function Deudas(){
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'cupon.xls';
+        a.download = 'deudas.xls';
         a.click();
         window.URL.revokeObjectURL(url);
     }
