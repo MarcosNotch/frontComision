@@ -24,6 +24,8 @@ export default function Deudas(){
     const [pagina, setPagina] = useState(1)
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
+    const anioRef = useRef();
+    const idZona = sessionStorage.getItem("idZona")
 
     const hasNext = pagina < totalRows - 1
 
@@ -32,8 +34,15 @@ export default function Deudas(){
         setValorFiltroNroAdherente(filtroNroAdherente.current.value)
     }
 
-    async function exportarReporte(){
-        const toastId = toast.loading("Generando cupon de pago...")
+    async function exportarReporte(e){
+        e.preventDefault()
+        console.log(anioRef.current.value)
+        if (anioRef.current.value === null || anioRef.current.value === "" ){
+            toast.error("Error debe ingresar un año");
+            return
+        }
+
+        const toastId = toast.loading("Generando reporte de deudas...")
         const options =
         {
             method: "GET",
@@ -43,16 +52,16 @@ export default function Deudas(){
             }
         }
 
-        const response = await fetch(`http://54.89.184.151:8080/api/v1/deudas/printDeudaVecinal?idZona=${1}${valorFiltroNroAdherente ? `&nroAdherente=${valorFiltroNroAdherente}` : ''}&fechaDesde=${dayjs(startDateMov1).format('YYYY-MM-DD')}&fechaHasta=${dayjs(startDateMov2).format('YYYY-MM-DD')}`, options)
+        const response = await fetch(`https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/pagos/descargarExcel?idZona=${idZona}&year=${anioRef.current.value}`, options)
         
-        toast.update(toastId, { render: "Cupon Generado con Exito!", type: "success", isLoading: false,
+        toast.update(toastId, { render: "Reporte Generado con Exito!", type: "success", isLoading: false,
         hideProgressBar:false, autoClose:3000 });
 
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'cupon.pdf';
+        a.download = 'cupon.xls';
         a.click();
         window.URL.revokeObjectURL(url);
     }
@@ -144,7 +153,21 @@ export default function Deudas(){
         prepareRow,
     } = tableInstance
     return (
-        <div className="w-full flex flex-col pb-10">
+        <>
+         <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+                />
+                
+            <div className="w-full flex flex-col pb-10">
             <PageTitle text="Deudas" />
             <form onSubmit={buscarCliente} className="flex flex-col lg:space-y-0 space-y-4 sm:flex-row flex-wrap space-x-4 items-start justify-start mb-4">
             <div className="flex flex-col space-y-1 items-start">
@@ -166,7 +189,8 @@ export default function Deudas(){
                 </div>
                 <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <CelesteButton texto={"Buscar Vecino"} />
-                    <CelesteButton texto={"Exportar"} accion={exportarReporte}/>
+                    <input placeholder="Año " ref={anioRef} className="rounded-sm bg-azul2 outline-none px-2 h-10 text-gray-300 border border-gray-400" type="number" name="" />
+                    <CelesteButton texto={"Exportar Excel"} accion={exportarReporte}/>
                 </div>
               
             </div>
@@ -247,6 +271,8 @@ export default function Deudas(){
                 <DetalleDeDeuda nroAdherente={valorFiltroNroAdherente} fechaDesde={dayjs(startDateMov1).format('YYYY-MM-DD')} fechaHasta={dayjs(startDateMov2).format('YYYY-MM-DD')}/>
             }
             </div>
+        </>
+        
     )
 
 
