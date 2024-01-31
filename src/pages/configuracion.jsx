@@ -15,6 +15,7 @@ export default function Configuracion(){
 
     const usuarioSiroRef = useRef()
     const passwordSiroRef = useRef()
+    const identificadorDeCuentaRef = useRef()
     const usuarioGmailRef = useRef()
     const passwordGmailRef = useRef()
     const passwordRef = useRef()
@@ -63,7 +64,8 @@ export default function Configuracion(){
             body: JSON.stringify({
                 idSiro: siro.idSiro,
                 usuario: usuarioSiroRef.current.value,
-                password: passwordSiroRef.current.value
+                password: passwordSiroRef.current.value,
+                identificador_de_cuenta: identificadorDeCuentaRef.current.value
             })
         }
         const response = await fetch('https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/siro', options)
@@ -139,6 +141,10 @@ export default function Configuracion(){
                         <div>
                             <p className="text-gray-300 ">Contraseña</p>
                             <input ref={passwordSiroRef} defaultValue={siro?.password} className="rounded-sm bg-azul2 outline-none px-2 h-10 text-gray-300 border border-gray-400" type="text" name="" />   
+                        </div>
+                        <div>
+                            <p className="text-gray-300 ">Identificador de cuenta</p>
+                            <input ref={identificadorDeCuentaRef} defaultValue={siro?.identificadorDeCuenta} className="rounded-sm bg-azul2 outline-none px-2 h-10 text-gray-300 border border-gray-400" type="text" name="" />   
                         </div>
                         <div className="flex items-end justify-start sm:justify-end">
                             <CelesteButton texto={"Guardar Siro"} accion={guardarSiro}/>
