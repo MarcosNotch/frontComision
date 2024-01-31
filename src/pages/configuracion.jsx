@@ -65,7 +65,7 @@ export default function Configuracion(){
                 idSiro: siro.idSiro,
                 usuario: usuarioSiroRef.current.value,
                 password: passwordSiroRef.current.value,
-                identificador_de_cuenta: identificadorDeCuentaRef.current.value
+                identificadorDeCuenta: identificadorDeCuentaRef.current.value
             })
         }
         const response = await fetch('https://rl6ffmie96.execute-api.us-east-1.amazonaws.com/production/api/v1/siro', options)
