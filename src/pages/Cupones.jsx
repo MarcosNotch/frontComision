@@ -63,7 +63,7 @@ export default function Cupones(){
                 setTotalRows(data.total)
                 setLoading(false)
             } catch (e) {
-                console.log(e)
+      
                 if (!signal.aborted) {
                     setPagos([]);
                 }
